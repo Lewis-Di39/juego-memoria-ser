@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juego de Memoria - Verbo Ser</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #f4f4f4;
+    }
+    h1 {
+      color: #333;
+    }
+    .game-board {
+      display: grid;
+      grid-template-columns: repeat(4, 150px);
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .card {
+      background: #4a90e2;
+      color: white;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .card.flipped {
+      background: white;
+      color: black;
+      border: 2px solid #4a90e2;
+    }
+  </style>
+</head>
+<body>
+  <h1>Juego de Memoria: Verbo Ser</h1>
+  <div class="game-board" id="gameBoard"></div>
+
+  <script>
+    const pairs = [
+      { text: "Es un futbolista argentino. Es bajito y famoso.", match: "Lionel Messi" },
+      { text: "Es una artista mexicana. Es conocida por sus cejas y sus cuadros.", match: "Frida Kahlo" },
+      { text: "Es un actor canadiense. Es John Wick.", match: "Keanu Reeves" },
+      { text: "Es una cantante colombiana. Es rubia y muy talentosa.", match: "Shakira" },
+      { text: "Es un científico alemán. Es famoso por la teoría de la relatividad.", match: "Albert Einstein" },
+      { text: "Es un empresario sudafricano. Es el fundador de Tesla.", match: "Elon Musk" },
+	  { text: "Es un cantante británico. Es conocido por su estilo musical único y su carisma.", match: "Ed Sheeran" },
+      { text: "Es una actriz estadounidense. Es conocida por sus papeles en películas de acción y por su destreza en las artes marciales.", match: "Milla Jovovich" },
+      { text: "Es un inventor estadounidense. Es famoso por su trabajo con la bombilla y la corriente alterna.", match: "Thomas Edison" },
+      { text: "Es un pintor español. Es conocido por su estilo surrealista y su famoso cuadro, La persistencia de la memoria.", match: "Salvador Dalí" },
+      { text: "Es una escritora británica. Es famosa por su serie de libros sobre un joven mago llamado Harry Potter.", match: "J.K. Rowling" },
+	  { text: "Es una cantante estadounidense. Es rubia, alta y muy famosa por sus canciones.", match: "Taylor Swift" },
+    ];
+
+    const cards = [];
+    pairs.forEach(pair => {
+      cards.push({ value: pair.text, id: pair.match });
+      cards.push({ value: pair.match, id: pair.match });
+    });
+
+    cards.sort(() => 0.5 - Math.random());
+
+    const board = document.getElementById("gameBoard");
+    let flippedCards = [];
+
+    cards.forEach((card, index) => {
+      const div = document.createElement("div");
+      div.className = "card";
+      div.dataset.id = card.id;
+      div.dataset.index = index;
+      div.innerText = "?";
+
+      div.addEventListener("click", () => {
+        if (flippedCards.length < 2 && !div.classList.contains("flipped")) {
+          div.classList.add("flipped");
+          div.innerText = card.value;
+          flippedCards.push(div);
+
+          if (flippedCards.length === 2) {
+            const [card1, card2] = flippedCards;
+            if (card1.dataset.id === card2.dataset.id) {
+              flippedCards = [];
+            } else {
+              setTimeout(() => {
+                card1.classList.remove("flipped");
+                card2.classList.remove("flipped");
+                card1.innerText = "?";
+                card2.innerText = "?";
+                flippedCards = [];
+              }, 1000);
+            }
+          }
+        }
+      });
+
+      board.appendChild(div);
+    });
+  </script>
+</body>
+</html>
+
+
+
